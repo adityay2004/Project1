@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, KeyboardAvoidingView, SafeAreaView, StatusBar, StyleSheet, FlatList, Image, Platform, Pressable, TouchableOpacity } from 'react-native'
+import { View, Text, ScrollView, KeyboardAvoidingView, SafeAreaView, StatusBar, StyleSheet, FlatList, Image, Platform, Pressable, TouchableOpacity, ActivityIndicator } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { Card } from "react-native-shadow-cards";
 import ImageApi from '../../assets/Api/ImageApi';
@@ -6,15 +6,19 @@ import Customheader from '../common/Customheader';
 import Ionicons from 'react-native-vector-icons/AntDesign';
 import { useDispatch, useSelector } from 'react-redux';
 import { addItemtoCard, addItemtoWishlist, removeItemFromCard, removeItemFromWishlist } from '../../redux/Action/Action';
+import { getDataapi } from '../../redux-toolkit/getData';
 
 const Showpic = () => {
-    const [data, Setdata] = useState([])
+  //  const [data, Setdata] = useState([])
 
     const cartdata = useSelector((state) => state.reducer)
     const wishlist = useSelector((state) => state.reducerWishlist)
+    const data = useSelector((state) => state.getDatareducer)
     const dispatch = useDispatch();
     useEffect(() => {
-        Setdata(ImageApi)
+        dispatch(getDataapi())
+        console.log(data)
+        //Setdata(apiData)
     }, [])
     const _randerData = ({ item }) => {
         return (
@@ -29,7 +33,7 @@ const Showpic = () => {
 
                                 <TouchableOpacity
                                     onPress={() => {
-                                     dispatch(removeItemFromCard(item))
+                                        dispatch(removeItemFromCard(item))
                                     }}
                                     style={{
                                         backgroundColor: "#D8D8D8",
@@ -67,7 +71,7 @@ const Showpic = () => {
                             style={styles.view2}
                         >
                             <TouchableOpacity style={styles.view2Pressable}
-                                onPress={() => { dispatch(addItemtoCard(item))}}
+                                onPress={() => { dispatch(addItemtoCard(item)) }}
                             >
                                 <Ionicons name="shoppingcart" size={18} color='black' />
                                 <Text style={styles.text1}>Add</Text>
@@ -103,24 +107,27 @@ const Showpic = () => {
         <SafeAreaView style={styles.container}>
             <StatusBar hidden={true} />
             <Customheader tittle="Flatlist"></Customheader>
-            <ScrollView>
+            <KeyboardAvoidingView behavior={Platform === "ios" ? "paddingLeft" : null} style={styles.container}>
+                {
+                    console.log("aa",data)
+                }
+                {
+                    data?.loading ? <ActivityIndicator size="large" color="#00ff00" /> : (
+                        <View style={styles.container}>
+                            <FlatList
+                                style={{ marginLeft: 10, marginRight: 10, }}
+                                keyExtractor={(key) => key.index}
+                                horizontal={false}
+                                showsHorizontalScrollIndicator={false}
+                                showsVerticalScrollIndicator={false}
+                                data={data.photos}
+                                renderItem={_randerData} />
+                        </View>
+                    )
+                }
 
-                <KeyboardAvoidingView behavior={Platform === "ios" ? "paddingLeft" : null} style={styles.container}>
 
-                    <View style={styles.container}>
-                        <FlatList
-                            style={{ marginLeft: 10, marginRight: 10, }}
-                            keyExtractor={(key) => key.index}
-                            horizontal={false}
-                            showsHorizontalScrollIndicator={false}
-                            showsVerticalScrollIndicator={false}
-                            data={data}
-                            renderItem={_randerData} />
-
-                    </View>
-
-                </KeyboardAvoidingView>
-            </ScrollView>
+            </KeyboardAvoidingView>
         </SafeAreaView>
     )
 }

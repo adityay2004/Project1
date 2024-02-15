@@ -3,7 +3,8 @@ import React, { useEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native';
 import { deleteLogindata, getLogindata } from '../../AsyncAction';
 import Customheader from '../common/Customheader';
-
+import { getDataapi } from '../../redux-toolkit/getData';
+getDataapi
 const Home = () => {
   const navigation = useNavigation();
   const [data, SetData] = useState([]);
@@ -14,7 +15,7 @@ const Home = () => {
   }
 
   useEffect(() => {
-    getdata();
+     getdata();
   }, [])
 
   const getdata = async () => {
@@ -27,7 +28,7 @@ const Home = () => {
   return (
 
     <SafeAreaView style={styles.container}>
-      <StatusBar hidden={true} />
+     <StatusBar hidden={true} />
       <Customheader tittle="Home" />
       <ScrollView>
         <KeyboardAvoidingView behavior={Platform === "ios" ? "paddingLeft" : null} style={styles.container}>
