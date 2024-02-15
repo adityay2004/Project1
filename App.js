@@ -6,6 +6,9 @@ import store from './src/redux/Store/Store'
 const App = () => {
 
   return (
+    // <Provider store={store}>
+    //   <StackNavigation />
+    // </Provider>
     <Provider store={store}>
       <StackNavigation />
     </Provider>
